@@ -1,0 +1,11 @@
+sources:
+    coffee:
+        driver: "image/tiff"
+        persist: "never"
+        args: 
+            file: "example_data/coffee.tif"
+    lfw_subset:
+        driver: "image/tiff"
+        persist: "never"
+        args:
+            file: "example_data/lfw_subset_as_stack.tif"
