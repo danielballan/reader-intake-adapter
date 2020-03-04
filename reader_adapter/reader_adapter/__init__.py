@@ -1,11 +1,9 @@
-class DataSource(DictSerialiseMixin):
-    """An object which can produce data
+from .vendored import DictSerialiseMixin
 
-    This is the base class for all Intake plugins, including catalogs and
-    remote (server) data objects. To produce a new plugin commonly involves
-    subclassing this definition and overriding some or all of the methods.
 
-    This class is not useful in itself, most methods raise NotImplemented.
+class ReaderAdapter(DictSerialiseMixin):
+    """
+    Takes in a Reader and builds the DataSource API around it.
     """
     name = None
     version = None
@@ -14,24 +12,23 @@ class DataSource(DictSerialiseMixin):
     datashape = None
     description = None
 
-    @property
-    def cache_dirs(self):
-        return [c._cache_dir for c in self.cache]
+    # @property
+    # def cache_dirs(self):
+    #     return [c._cache_dir for c in self.cache]
 
-    def set_cache_dir(self, cache_dir):
-        for c in self.cache:
-            c._cache_dir = make_path_posix(cache_dir)
+    # def set_cache_dir(self, cache_dir):
+    #     for c in self.cache:
+    #         c._cache_dir = make_path_posix(cache_dir)
 
-    def __init__(self, storage_options=None, metadata=None):
-        # default data
-        self.metadata = metadata or {}
-        if isinstance(self.metadata, dict):
-            storage_options = self._captured_init_kwargs.get('storage_options',
-                                                             {})
-            self.cache = make_caches(self.name, self.metadata.get('cache'),
-                                     catdir=self.metadata.get('catalog_dir',
-                                                              None),
-                                     storage_options=storage_options)
+    def __init__(self, reader):
+        self.metadata = {}
+        # if isinstance(self.metadata, dict):
+        #     storage_options = self._captured_init_kwargs.get('storage_options',
+        #                                                      {})
+        #     self.cache = make_caches(self.name, self.metadata.get('cache'),
+        #                              catdir=self.metadata.get('catalog_dir',
+        #                                                       None),
+        #                              storage_options=storage_options)
         self.datashape = None
         self.dtype = None
         self.shape = None
@@ -41,10 +38,10 @@ class DataSource(DictSerialiseMixin):
         self.on_server = False
         self.cat = None  # the cat from which this source was made
 
-    def _get_cache(self, urlpath):
-        if len(self.cache) == 0:
-            return [urlpath]
-        return [c.load(urlpath) for c in self.cache]
+    # def _get_cache(self, urlpath):
+    #     if len(self.cache) == 0:
+    #         return [urlpath]
+    #     return [c.load(urlpath) for c in self.cache]
 
     def _get_schema(self):
         """Subclasses should return an instance of base.Schema"""
@@ -289,5 +286,3 @@ class DataSource(DictSerialiseMixin):
     def is_persisted(self):
         from ..container.persist import store
         return self.metadata.get('original_tok', None) in store
-
-
