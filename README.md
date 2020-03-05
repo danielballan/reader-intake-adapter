@@ -1,4 +1,4 @@
-This aims to demonstrate that if a library implements this API:
+This proof of concept aims to demonstrate that if a library implements this API:
 
 ```py
 class MyReader:
@@ -28,6 +28,7 @@ following:
 * Accept an intake dependency, subclass `DataSource`, and define `_get_schema`,
   `_get_partition`, `read`, `to_dask`, and (sometimes) `read_partition`.
 * Avoid the intake dependency and implement the `DataSource` API from scratch.
+  (I am not aware of any packages that do this, but it's conceivable.)
 
 This proposal has two aims:
 
@@ -48,7 +49,8 @@ MyDataSource = reader_adapter.adapt(MyReader, 'MyDataSource')
 
 to auto-build a complete `DataSource` out of their Reader and declare that as an
 `'intake.drivers'` entrypoints. This is what `my_tiff_package` and
-`my_fwf_package` do.
+`my_fwf_package` do. The example scripts `tiff_example.py` and `fwf_example.py`
+show that these work.
 
 We could make this even more convenient for package authors by making one change
 to intake itself.  If intake were to incorporate this `reader_adapter` code and
