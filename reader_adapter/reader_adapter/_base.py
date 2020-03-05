@@ -3,7 +3,7 @@ from ._vendored import DictSerialiseMixin
 
 class ReaderAdapter(DictSerialiseMixin):
     """
-    Takes in a Reader and builds the DataSource API around it.
+    This builds the DataSource API around a Reader class.
     """
     name = None
     version = None

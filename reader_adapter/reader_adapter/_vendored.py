@@ -1,5 +1,9 @@
 """
-These objects are vendored from intake.
+These objects are vendored from intake:
+
+- Schema
+- DictSerialseMixin
+- classname
 """
 
 import collections

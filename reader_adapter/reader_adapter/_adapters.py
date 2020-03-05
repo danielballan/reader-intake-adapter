@@ -1,3 +1,6 @@
+"""
+Adapters for common 'container' types.
+"""
 from ._base import ReaderAdapter
 from ._vendored import Schema
 
