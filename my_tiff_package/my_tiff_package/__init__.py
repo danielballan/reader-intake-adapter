@@ -8,7 +8,7 @@ class TIFFReader:
     """
     container = 'dask.array.Array'
 
-    def __init__(self, file, metadata):
+    def __init__(self, file):
         if isinstance(file, str):
             # file is a filepath or filepath glob
             import os
@@ -18,9 +18,6 @@ class TIFFReader:
                 import glob
                 self._tiff_files = [tifffile.TiffFile(file_)
                                     for file_ in glob.glob(file)]
-            self.metadata = metadata
-            # TODO Pick off metadata of interest from self._tiff_files and
-            # merge it with this.
         else:
             # file is a file buffer
             self._tiff_files = [tifffile.TiffFile(file)]
@@ -58,3 +55,8 @@ class TIFFReader:
 
 class Closed(Exception):
     ...
+
+
+# intake compatibility
+from reader_adapter import adapt  # noqa
+TIFFDataSource = adapt(TIFFReader, 'TIFFDataSource')

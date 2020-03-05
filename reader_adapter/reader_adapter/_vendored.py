@@ -2,10 +2,13 @@
 These objects are vendored from intake.
 """
 
+import collections
+
+
 class Schema(dict):
     """
     Vendored from intake.source. Original docstring:
-    
+
     Holds details of data description for any type of data-source
 
     This should always be pickleable, so that it can be sent from a server
@@ -63,9 +66,10 @@ class DictSerialiseMixin:
         # it sorts the keys, and it turns out that this sort operation
         # dominates the call time, even for very small dicts. Using an
         # OrderedDict steers dask toward a different and faster tokenization.
-        kwargs = collections.OrderedDict({k: arg.__getstate__()
-                  if isinstance(arg, DictSerialiseMixin) else arg
-                  for k, arg in self._captured_init_kwargs.items()})
+        kwargs = collections.OrderedDict(
+            {k: arg.__getstate__()
+             if isinstance(arg, DictSerialiseMixin) else arg
+             for k, arg in self._captured_init_kwargs.items()})
         return collections.OrderedDict(cls=self.classname,
                                        args=args,
                                        kwargs=kwargs)
@@ -82,3 +86,12 @@ class DictSerialiseMixin:
 
     def __eq__(self, other):
         return hash(self) == hash(other)
+
+
+def classname(ob):
+    """Get the object's class's name as package.module.Class"""
+    import inspect
+    if inspect.isclass(ob):
+        return '.'.join([ob.__module__, ob.__name__])
+    else:
+        return '.'.join([ob.__class__.__module__, ob.__class__.__name__])

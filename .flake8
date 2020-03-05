@@ -1,0 +1,5 @@
+[flake8]
+exclude = .git,__pycache__,build,dist
+max-line-length = 115
+ignore = E501,W504
+select = E,F,W,B,B901
