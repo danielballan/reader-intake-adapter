@@ -264,9 +264,12 @@ class ReaderAdapter(DictSerialiseMixin):
         out.name = self.name
         return out
 
+    # def get_persisted(self):
+    #     from ..container.persist import store
+    #     return store[self._tok]()
+
     def get_persisted(self):
-        from ..container.persist import store
-        return store[self._tok]()
+        return NotImplementedError
 
     @staticmethod
     def _persist(source, path, **kwargs):
@@ -284,5 +287,9 @@ class ReaderAdapter(DictSerialiseMixin):
 
     @property
     def is_persisted(self):
-        from ..container.persist import store
-        return self.metadata.get('original_tok', None) in store
+        return False
+
+    # @property
+    # def is_persisted(self):
+    #     from ..container.persist import store
+    #     return self.metadata.get('original_tok', None) in store
