@@ -1,7 +1,7 @@
-from ._vendored import DictSerialiseMixin
+from ._vendored import classname, DictSerialiseMixin
 
 
-class ReaderAdapter(DictSerialiseMixin):
+class DataSource(DictSerialiseMixin):
     """
     This builds the DataSource API around a Reader class.
     """
@@ -293,3 +293,55 @@ class ReaderAdapter(DictSerialiseMixin):
     # def is_persisted(self):
     #     from ..container.persist import store
     #     return self.metadata.get('original_tok', None) in store
+
+
+class Adapter(DataSource):
+    """
+    Subclass is expected to define the methods:
+
+    - _get_schema()
+    - _get_partition(i)
+    - read_partition(i)
+    - read()
+    - to_dask()
+
+    in terms of _adapter_read()
+
+    and the attributes:
+
+    - container  # name matching intake's container registry
+    - _EXPECTED_CONTAINER  # fully-qualified class name
+
+    """
+    partition_access = True
+
+    def __init__(self, *args, metadata=None, storage_options=None, **kwargs):
+        # Instantiate and stash our Reader (subclass) instance.
+        self.__reader = self._reader_class(*args, **kwargs)
+        # Verify that its 'container' matches the type that this adapater
+        # expects. If not, the adapter has been misapplied, and we should fail
+        # early.
+        if self.__reader.container != self._EXPECTED_CONTAINER:
+            raise TypeError(
+                "Expected Reader with container {self._EXPECTED_CONTAINER!r}")
+        self.__reading = None  # will cache value of self.__reader.read()
+
+        super().__init__(metadata=metadata, storage_options=storage_options)
+
+    def _adapter_read(self):
+        """
+        Call read() on our Reader and cache the result.
+        """
+        if self.__reading is None:
+            self.__reading = self.__reader.read()
+            # One more check. Not sure we need/want to be this strict.
+            return_type_name = classname(self.__reading)
+            if return_type_name !=  self._EXPECTED_CONTAINER:
+                raise TypeError(
+                    f"Expected Reader.read() to returned type "
+                    f"{return_type_name} but type {self._EXPECTED_CONTAINER} "
+                    f"was expected.")
+        return self.__reading
+
+    def _close(self):
+        self.__reader.close()

@@ -37,4 +37,4 @@ register._registry = {}  # maps container (string) to adapter_class
 
 
 # Register built-in adapters.
-register('dask.array.Array', DaskArrayAdapter)
+register('dask.array.core.Array', DaskArrayAdapter)
