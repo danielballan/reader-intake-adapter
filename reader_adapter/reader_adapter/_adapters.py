@@ -42,7 +42,7 @@ class DaskArrayAdapter(ReaderAdapter):
         reading = self.__read()
         return Schema(
             datashape=None,
-            dtype=reading.dtype,
+            dtype=str(reading.dtype),  # str so it is serializable
             shape=reading.shape,
             npartitions=reading.npartitions,
             chunks=reading.chunks,

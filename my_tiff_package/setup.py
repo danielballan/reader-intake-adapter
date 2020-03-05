@@ -6,6 +6,6 @@ setup(
     packages=['my_tiff_package'],
     entry_points={
         'intake.drivers':
-            ['tiff = my_tiff_package:TIFFReader']},
+            ['tiff = my_tiff_package:TIFFDataSource']},
     install_requires=['dask[array]', 'tifffile'],
 )

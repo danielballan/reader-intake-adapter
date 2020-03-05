@@ -275,8 +275,12 @@ class ReaderAdapter(DictSerialiseMixin):
 
     @property
     def has_been_persisted(self):
-        from ..container.persist import store
-        return self._tok in store
+        return False
+
+    # @property
+    # def has_been_persisted(self):
+    #     from ..container.persist import store
+    #     return self._tok in store
 
     @property
     def is_persisted(self):
