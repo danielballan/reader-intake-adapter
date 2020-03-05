@@ -9,3 +9,8 @@ sources:
         persist: "never"
         args:
             file: "example_data/lfw_subset_as_stack.tif"
+    table:
+        driver: "fwf"
+        persist: "never"
+        args:
+            file: "example_data/table.txt"

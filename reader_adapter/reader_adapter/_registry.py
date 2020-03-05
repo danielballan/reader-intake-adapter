@@ -1,4 +1,4 @@
-from ._adapters import DaskArrayAdapter
+from ._adapters import DaskArrayAdapter, DaskDataFrameAdapter
 
 
 def register(container, adapter):
@@ -38,3 +38,4 @@ register._registry = {}  # maps container (string) to adapter_class
 
 # Register built-in adapters.
 register('dask.array.core.Array', DaskArrayAdapter)
+register('dask.dataframe.core.DataFrame', DaskDataFrameAdapter)
