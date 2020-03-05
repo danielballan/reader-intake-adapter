@@ -336,7 +336,7 @@ class Adapter(DataSource):
             self.__reading = self.__reader.read()
             # One more check. Not sure we need/want to be this strict.
             return_type_name = classname(self.__reading)
-            if return_type_name !=  self._EXPECTED_CONTAINER:
+            if return_type_name != self._EXPECTED_CONTAINER:
                 raise TypeError(
                     f"Expected Reader.read() to returned type "
                     f"{return_type_name} but type {self._EXPECTED_CONTAINER} "
